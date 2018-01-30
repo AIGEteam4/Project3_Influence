@@ -44,22 +44,20 @@ public class Character : MonoBehaviour {
 
             //Send raycast down to terrain to get its normal where we're standing
             RaycastHit hit;
-            Vector3 terrainNormal = Vector3.zero;
+            Vector3 terrainNormal = Vector3.up;
 
             if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit))
             {
-                terrainNormal = 1.1f * hit.normal;
-                terrainNormal.y = 0;
+                terrainNormal = hit.normal;
             }
 
-            //If moving against the slope, apply the terrain normals to movement to slow it
-            if(Mathf.Sign(moveVec.x) != Mathf.Sign(terrainNormal.x))
+            if (Vector3.Dot(new Vector3(terrainNormal.x, 0, terrainNormal.z).normalized, moveVec) < -0.25f)
             {
-                moveVec.x += terrainNormal.x;
-            }
-            if(Mathf.Sign(moveVec.z) != Mathf.Sign(terrainNormal.z))
-            {
-                moveVec.z += terrainNormal.z;
+                //x = 1 -> y = 1
+                //x = 0.9 -> y = 1
+                //x = 0.7 -> y = 0.5
+                //x = 0.5 -> y = 0                
+                moveVec *= 2.5f * (Mathf.Min(Mathf.Max(terrainNormal.y, .5f), .9f) -.5f);
             }
 
             //Apply move speed to move vec

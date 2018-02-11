@@ -23,12 +23,17 @@ public class CameraController : MonoBehaviour {
     //Move speed for free cam
     public float moveSpeed;
 
+    private float zoom;
+
 	// Use this for initialization
 	void Start () {
         mode = CameraMode.followCharacter;
         clickHeld = false;
 
         cam = GetComponent<Camera>();
+
+        zoom = 10f;
+        transform.position = new Vector3(0,zoom,zoom);
 	}
 	
 	// Update is called once per frame
@@ -37,7 +42,7 @@ public class CameraController : MonoBehaviour {
         if(mode == CameraMode.followCharacter)
         {
             //Follow character's position so always stay in center of screen
-            transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 50, character.transform.position.z - 50);
+            transform.position = new Vector3(character.transform.position.x, character.transform.position.y + zoom, character.transform.position.z - zoom);
 
             //Switch modes if user presses 2
             if(Input.GetKeyDown(KeyCode.Alpha2))
@@ -81,7 +86,7 @@ public class CameraController : MonoBehaviour {
                 else
                 {
                     //Difference calculated based on double the othographic size of cam so mouse movement maps to camera movement better
-                    Vector3 diff = 2 * cam.orthographicSize * (cam.ScreenToViewportPoint(Input.mousePosition) - clickOrigin);
+                    Vector3 diff = 2 * zoom * (cam.ScreenToViewportPoint(Input.mousePosition) - clickOrigin);
                     transform.position = dragCamPosOrigin - new Vector3(diff.x, 0, diff.y);
                 }
             }
@@ -101,7 +106,13 @@ public class CameraController : MonoBehaviour {
         //Use scroll wheel to zoom camera out/increase orthographic size
         if (Input.mouseScrollDelta.y != 0)
         {
-            cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 5, 75);
+            float oldZoom = zoom;
+            zoom = Mathf.Clamp(zoom-Input.mouseScrollDelta.y, 3f, 75f);
+
+            if (mode == CameraMode.followCharacter)
+                transform.position = new Vector3(transform.position.x, character.transform.position.y + zoom, character.transform.position.z - zoom);
+            else
+                transform.position = new Vector3(transform.position.x, transform.position.y + (zoom-oldZoom), transform.position.z - (zoom-oldZoom));
         }
     }
 }

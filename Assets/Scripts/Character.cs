@@ -6,67 +6,47 @@ public class Character : MonoBehaviour {
 
     public float moveSpeed;//Move speed for character
 
+    private Rigidbody rb;
+
     // Use this for initialization
     void Start () {
-        //Set up initial position for terrain
+        //Set up initial position so it's flush w/ terrain
         Vector3 pos = transform.position;
-        pos.y = Terrain.activeTerrain.SampleHeight(pos);
+        pos.y = Terrain.activeTerrain.SampleHeight(pos) + 1f;
         transform.position = pos;
+
+        rb = GetComponent<Rigidbody>();//Get rigidbody for movement
     }
 	
 	// Update is called once per frame
 	void Update () {
         Vector3 moveVec = Vector3.zero;//Vector representing any movements character needs to make
 
-        //If user presses WASD, set x and z values of move vec for appropriate direction
+        Vector3 newVel = rb.velocity;
+        float yVel = newVel.y;
+        newVel.y = 0;
+
+        //If user presses WASD, modify velocity to accel in appropriate direction
         if (Input.GetKey(KeyCode.W))
         {
-            moveVec.z = 1;
+            newVel += Vector3.forward;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            moveVec.z = -1;
+            newVel += Vector3.back;
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            moveVec.x = 1;
+            newVel += Vector3.right;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            moveVec.x = -1;
+            newVel += Vector3.left;
         }
 
-        //If we're moving this frame, time to do some math to make steep terrain impassible
-        if(moveVec.x != 0 || moveVec.z != 0)
-        {
-            moveVec = moveVec.normalized;
-
-            //Send raycast down to terrain to get its normal where we're standing
-            RaycastHit hit;
-            Vector3 terrainNormal = Vector3.up;
-
-            if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit))
-            {
-                terrainNormal = hit.normal;
-            }
-
-            if (Vector3.Dot(new Vector3(terrainNormal.x, 0, terrainNormal.z).normalized, moveVec) < -0.25f)
-            {
-                //x = 1 -> y = 1
-                //x = 0.9 -> y = 1
-                //x = 0.7 -> y = 0.5
-                //x = 0.5 -> y = 0                
-                moveVec *= 2.5f * (Mathf.Min(Mathf.Max(terrainNormal.y, .5f), .9f) -.5f);
-            }
-
-            //Apply move speed to move vec
-            moveVec *= moveSpeed * Time.deltaTime;
-
-            Vector3 newPos = transform.position + moveVec;//Get final new pos
-            newPos.y = Terrain.activeTerrain.SampleHeight(newPos);//Get y pos for terrain height
-
-            transform.position = newPos;//Update character position
-        }
+        newVel = Vector3.ClampMagnitude(newVel, moveSpeed);//Clamp velocity on xz
+        newVel.y = yVel;//Maintain previous y velocity
+        rb.velocity = newVel;//Update rigidbody velocity
     }
 }

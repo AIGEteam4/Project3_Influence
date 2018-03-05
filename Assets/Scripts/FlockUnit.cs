@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +30,8 @@ public class FlockUnit : MonoBehaviour {
     public float seekWeight;
 
     public float height; //height off ground
+    public bool touchBridge;
+    public GameObject bridge;
 
     // Use this for initialization
     void Start () {
@@ -38,6 +40,7 @@ public class FlockUnit : MonoBehaviour {
         GetNeighbors(); //build the neighbors list for each unit
         position = transform.position; //starting position is equal to placement in scene
         target = GameObject.Find("Target"); //test target
+        touchBridge = false;
     }
 	
 	// Update is called once per frame
@@ -152,8 +155,6 @@ public class FlockUnit : MonoBehaviour {
         //check distance from current
         float distance = Vector3.Magnitude(position - neighbor.transform.position);
 
-        Debug.DrawLine(gameObject.transform.position, neighbor.transform.position, Color.cyan);
-
         //if within a certain range flee
         if (distance < seperationRange)
         {
@@ -206,8 +207,7 @@ public class FlockUnit : MonoBehaviour {
         //add velocity to position
         position += velocity * Time.deltaTime;
 
-        //keep units at level with floor
-        position.y = Terrain.activeTerrain.SampleHeight(position) + height;
+        SetYPos();
 
         //zero out accel
         acceleration = Vector3.zero;
@@ -219,6 +219,32 @@ public class FlockUnit : MonoBehaviour {
 
         //turn object toward direction
         //gameObject.transform.forward = direction;
+    }
+
+    //if units touch the bridge it will set their y to that not the terrain
+    void SetYPos()
+    {
+        if (touchBridge)
+        {
+            position.y = bridge.transform.position.y + height;
+        }
+        else
+        {
+            //keep units at level with floor
+            position.y = Terrain.activeTerrain.SampleHeight(position) + height;
+        }
+        
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        touchBridge = true;
+        bridge = other.gameObject;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        touchBridge = false;
     }
 
 }

@@ -9,6 +9,8 @@ public class NodeManager : MonoBehaviour
     *********************/
     public Vector3 defaultNodePosition; //Default position used for creating a node
     public float defaultNodeRadius;     //Default radius used for creating a node
+    public float defaultRandomNodeTime; //Default time allowed for flock to reach a node before it changes automatically
+                                        //Used for if the node spawns in an unreachable area
     public Node[] nodes;                //Array of nodes
 
     /********************
@@ -21,6 +23,7 @@ public class NodeManager : MonoBehaviour
     //Used for random path
     //Seperate to allow for nodes to be loosly saved
     Node randomNode;
+    float randomNodeTime;
 
     //The current Node
     Node currentNode;
@@ -29,17 +32,22 @@ public class NodeManager : MonoBehaviour
     Terrain terrain;
     TerrainData tData;
 
+    //Flocking 
+    FlockManager fM;    //Flock manager
+    GameObject target;  //The target object the flockers move towards
+    GameObject aStarChar;   //AStarUnit
+
     //What type of nodes to use
     enum PathType
     {
         Random,
-        Fixed
+        Fixed,
+        AStar
     }
     PathType pType;
 
     //Debug variables, currently enabled
     bool useDebug;
-    float debugTime;
     //Debug object
     GameObject debugSphere;
 
@@ -116,7 +124,12 @@ public class NodeManager : MonoBehaviour
         pType = PathType.Fixed;
 
         useDebug = true;
-        debugTime = 0.0f;
+
+        //If a bad time was given, set the default to 10 seconds
+        if(defaultRandomNodeTime <= 0)
+        {
+            defaultRandomNodeTime = 20.0f;
+        }
 
         nodeCount = nodes.Length;
 
@@ -143,26 +156,41 @@ public class NodeManager : MonoBehaviour
         GameObject.Destroy(debugSphere.GetComponent<Collider>());
         //Set the position to the initial node
         debugSphere.transform.position = nodes[currentFixedNode].position;
+        currentNode = nodes[currentFixedNode];
+
+        target = GameObject.Find("Target");
+        fM = GetComponent<FlockManager>();
+        aStarChar = GameObject.Find("AStarUnit");
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {	
-        //Added Debug stuff used for testing (Everything seems to work)
-        /*
-        if(useDebug)
+        if(pType == PathType.AStar)
         {
-            //Increments the time
-            debugTime += Time.deltaTime;
+            target.transform.position = aStarChar.transform.position;
+            currentNode.position = aStarChar.transform.position;
+            debugSphere.transform.position = aStarChar.transform.position;
+        }
+        else
+        {
+            float distance = Vector3.Distance(currentNode.position, fM.AveragePosition());
 
-            //If the time is over 4 seconds move to a new node
-            if (debugTime >= 4.0f)
+            if(distance < currentNode.radius)
             {
-                debugTime = 0.0f;
                 NextNode();
             }
+            else if(pType == PathType.Random)
+            {
+                randomNodeTime += Time.deltaTime;
+
+                if(randomNodeTime >= defaultRandomNodeTime)
+                {
+                    NextNode();
+                    randomNodeTime = 0.0f;
+                }
+            }
         }
-        */
 	}
 
     //Used for input handling
@@ -174,18 +202,25 @@ public class NodeManager : MonoBehaviour
             ShowDebug(!useDebug);
         }
         //1 key makes nodes progress on a fixed path
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(Input.GetKeyDown(KeyCode.Alpha3))
         {
             pType = PathType.Fixed;
             currentNode = nodes[currentFixedNode];
             debugSphere.transform.position = currentNode.position;
+            target.transform.position = currentNode.position;
         }
         //2 key has nodes become randomly placed
-        if(Input.GetKeyDown(KeyCode.Alpha2))
+        else if(Input.GetKeyDown(KeyCode.Alpha4))
         {
             pType = PathType.Random;
             currentNode = randomNode;
             debugSphere.transform.position = currentNode.position;
+            target.transform.position = currentNode.position;
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            pType = PathType.AStar;
+            currentNode = new Node(aStarChar.transform.position, defaultNodeRadius);
         }
     }
 
@@ -210,6 +245,7 @@ public class NodeManager : MonoBehaviour
 
         //Update the debugSphere
         debugSphere.transform.position = currentNode.position;
+        target.transform.position = currentNode.position;
 
         //Return the current node
         return currentNode;

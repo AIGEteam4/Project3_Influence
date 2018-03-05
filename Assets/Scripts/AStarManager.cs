@@ -81,7 +81,7 @@ public class AStarManager : MonoBehaviour {
     const int TERRAIN_SIZE = 180;
     const int HALF_TERRAIN_SIZE = 90;
 
-    const int NODE_SIZE = 5;
+    const int NODE_SIZE = 10;
 
     int numNodesPerRow = TERRAIN_SIZE / NODE_SIZE;
 
@@ -116,7 +116,7 @@ public class AStarManager : MonoBehaviour {
                 xPos = ((NODE_SIZE * x) - HALF_TERRAIN_SIZE) + halfNodeSize;
                 zPos = ((NODE_SIZE * z) - HALF_TERRAIN_SIZE) + halfNodeSize;
 
-                if (Physics.Raycast(new Ray(new Vector3(xPos, 100, zPos), Vector3.down), out hit, 150))
+                if (Physics.Raycast(new Ray(new Vector3(xPos, 100, zPos), Vector3.down), out hit, 150.0f))
                 {
                     int index = x + z * numNodesPerRow;
 
@@ -179,6 +179,8 @@ public class AStarManager : MonoBehaviour {
                     if (!Physics.Raycast(nodes[currentIndex].Center, vecToNeighbor, vecToNeighbor.magnitude, 1<<9))
                     {
                         nodes[currentIndex].AddNeighbor(otherNode.Index);
+
+                        //Debug.DrawLine(nodes[currentIndex].Center, otherNode.Center, Color.red, 60.0f);
                     }
                 }
             }
@@ -223,11 +225,16 @@ public class AStarManager : MonoBehaviour {
                 //Reconstruct shortest path from end to start
                 int indIter = currentInd;
 
-                while(indIter != -1)
+                /*while(indIter != -1)
                 {
                     pathPositions.Add(nodes[indIter].Center);
 
                     indIter = nodes[indIter].PreviousConnection;
+                }*/
+
+                for(int i = closed.Count - 1; i >= 0; --i)
+                {
+                    pathPositions.Add(nodes[closed[i]].Center);
                 }
 
                 break;
@@ -266,7 +273,7 @@ public class AStarManager : MonoBehaviour {
                 {
                     if(costToFrontier < nodes[frontierEndPtInd].CostSoFar)
                     {
-                        nodes[frontierEndPtInd].PreviousConnection = currentInd;
+                        //nodes[frontierEndPtInd].PreviousConnection = currentInd;
 
                         //Calc new estimated cost
                         float estCost = costToFrontier + (end - nodes[frontierEndPtInd].Center).sqrMagnitude;
@@ -303,7 +310,7 @@ public class AStarManager : MonoBehaviour {
                     nodes[frontierEndPtInd].SetCosts(costToFrontier,
                         costToFrontier + frontierToEnd.sqrMagnitude);
 
-                    nodes[frontierEndPtInd].PreviousConnection = currentInd;
+                    //nodes[frontierEndPtInd].PreviousConnection = currentInd;
 
                     float neighborEstCost = nodes[frontierEndPtInd].EstTotalCost;
 

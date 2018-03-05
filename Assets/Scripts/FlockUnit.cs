@@ -28,10 +28,9 @@ public class FlockUnit : MonoBehaviour {
     public float separationWeight;
     public float seperationRange;
     public float seekWeight;
+    public float obstacleAvoidWeight;
 
     public float height; //height off ground
-    public bool touchBridge;
-    public GameObject bridge;
 
     // Use this for initialization
     void Start () {
@@ -40,7 +39,6 @@ public class FlockUnit : MonoBehaviour {
         GetNeighbors(); //build the neighbors list for each unit
         position = transform.position; //starting position is equal to placement in scene
         target = GameObject.Find("Target"); //test target
-        touchBridge = false;
     }
 	
 	// Update is called once per frame
@@ -174,19 +172,26 @@ public class FlockUnit : MonoBehaviour {
         Vector3 ultForce = Vector3.zero;
 
         //Move towards the given target
-        ultForce += Seek(target.transform.position) * seekWeight;
+        ultForce += Seek(target.transform.position).normalized * seekWeight;
 
         //flocking
         //align
-        ultForce += Alignment(fM.AverageDirection()) * alignWeight;
+        ultForce += Alignment(fM.AverageDirection()).normalized * alignWeight;
 
         //cohere
-        ultForce += Cohesion(fM.AveragePosition()) * cohesionWeight;
+        ultForce += Cohesion(fM.AveragePosition()).normalized * cohesionWeight;
 
         //separate
         foreach (GameObject flock in neighbors)
         {
-            ultForce += Separation(flock) * separationWeight;
+            ultForce += Separation(flock).normalized * separationWeight;
+        }
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(new Ray(transform.position, transform.forward), out hit, 5.0f, 1<<8))
+        {
+            ultForce += (transform.position - hit.point).normalized * obstacleAvoidWeight;
         }
 
         //apply the force to the units acceleration
@@ -224,27 +229,12 @@ public class FlockUnit : MonoBehaviour {
     //if units touch the bridge it will set their y to that not the terrain
     void SetYPos()
     {
-        if (touchBridge)
-        {
-            position.y = bridge.transform.position.y + height;
-        }
-        else
-        {
-            //keep units at level with floor
-            position.y = Terrain.activeTerrain.SampleHeight(position) + height;
-        }
-        
-    }
+        RaycastHit hit;
 
-    void OnTriggerEnter(Collider other)
-    {
-        touchBridge = true;
-        bridge = other.gameObject;
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        touchBridge = false;
+        if(Physics.Raycast(new Ray(new Vector3(position.x, 50, position.z), Vector3.down), out hit, 100.0f, (1<<10)))
+        {
+            position.y = hit.point.y + 1;
+        }        
     }
 
 }

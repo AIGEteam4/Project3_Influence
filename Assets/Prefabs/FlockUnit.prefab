@@ -107,9 +107,12 @@ MonoBehaviour:
   maxSpeed: 1
   alignWeight: 1
   cohesionWeight: 1
-  separationWeight: 1
+  separationWeight: 0.5
   seperationRange: 1
-  seekWeight: 1
+  seekWeight: 5
+  height: 0
+  touchBridge: 0
+  bridge: {fileID: 0}
 --- !u!136 &136429458108828530
 CapsuleCollider:
   m_ObjectHideFlags: 1

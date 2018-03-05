@@ -48,6 +48,8 @@ public class FlockManager : MonoBehaviour {
             avgPos += flocker.transform.position;
         }
 
+        avgPos.y = 0;
+
         //divide by the number of flockers
         avgPos /= flockers.Count;
 

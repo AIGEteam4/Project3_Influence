@@ -174,7 +174,8 @@ public class NodeManager : MonoBehaviour
         }
         else
         {
-            float distance = Vector3.Distance(currentNode.position, fM.AveragePosition());
+
+            float distance = Vector3.Distance(new Vector3(currentNode.position.x, 0, currentNode.position.z), fM.AveragePosition());
 
             if(distance < currentNode.radius)
             {

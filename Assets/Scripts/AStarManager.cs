@@ -78,8 +78,6 @@ public class AStarNode
 
 public class AStarManager : MonoBehaviour {
 
-    public GameObject nodeObject;
-
     const int TERRAIN_SIZE = 180;
     const int HALF_TERRAIN_SIZE = 90;
 
@@ -181,8 +179,6 @@ public class AStarManager : MonoBehaviour {
                     if (!Physics.Raycast(nodes[currentIndex].Center, vecToNeighbor, vecToNeighbor.magnitude, 1<<9))
                     {
                         nodes[currentIndex].AddNeighbor(otherNode.Index);
-
-                        Debug.DrawLine(nodes[currentIndex].Center, otherNode.Center, Color.red, 60.0f);
                     }
                 }
             }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AStarUnit : MonoBehaviour {
 
-    public GameObject testSphere;
-
     AStarManager asMgr;
 
     Vector3 target;

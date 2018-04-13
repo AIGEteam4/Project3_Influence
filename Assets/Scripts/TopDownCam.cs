@@ -5,6 +5,7 @@ using UnityEngine;
 public class TopDownCam : MonoBehaviour {
 
     private float speed;
+    private Camera cam;
 
     // Use this for initialization
     void Start()
@@ -12,6 +13,8 @@ public class TopDownCam : MonoBehaviour {
         gameObject.transform.position = new Vector3(0, 200, 0);
         gameObject.transform.eulerAngles = new Vector3(90, 0, 0);
         speed = 2;
+        cam = gameObject.GetComponent<Camera>();
+        cam.orthographicSize = 100;
     }
 	
 	// Update is called once per frame
@@ -51,17 +54,13 @@ public class TopDownCam : MonoBehaviour {
         }
 
         //zoom
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q) && cam.orthographicSize > 10)
         {
-            Vector3 move = gameObject.transform.position;
-            move.y -= speed;
-            gameObject.transform.position = move;
+            cam.orthographicSize -= speed * 2;
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && cam.orthographicSize < 150)
         {
-            Vector3 move = gameObject.transform.position;
-            move.y += speed;
-            gameObject.transform.position = move;
+            cam.orthographicSize += speed * 2;
         }
     }
 }

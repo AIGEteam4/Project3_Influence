@@ -7,24 +7,20 @@ public class Unit : MonoBehaviour {
     //Basic attributes
     public Material color;
     public int strength;
-    Vector3 position;
 
-    Transform trans;
+    public UnitManager.Team team;
 
     //Constructor
-    public Unit(Material mat, int str, Vector3 pos)
+    public Unit(Material mat, int str, UnitManager.Team tm)
     {
         color = mat;
         strength = str;
-        position = pos;
+        team = tm;
     }
 
 	// Use this for initialization
 	void Start ()
     {
-        trans = GetComponent<Transform>();
-
-        trans.position = position;
 	}
 	
 	// Update is called once per frame

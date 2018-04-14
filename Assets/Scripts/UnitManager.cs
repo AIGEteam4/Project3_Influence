@@ -29,10 +29,12 @@ public class UnitManager : MonoBehaviour {
     public Material yellowMat;
     public Material blackMat;
 
+    public List<GameObject> unitList;
+
 	// Use this for initialization
 	void Start ()
     {
-		
+        unitList = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -119,5 +121,6 @@ public class UnitManager : MonoBehaviour {
 
         //Change the material
         newUnit.GetComponent<MeshRenderer>().material = mat;
+        unitList.Add(newUnit);
     }
 }

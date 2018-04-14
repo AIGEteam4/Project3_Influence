@@ -51,6 +51,37 @@ public class UnitManager : MonoBehaviour {
         }
 	}
 
+    //Handles keyboard input
+    private void FixedUpdate()
+    {
+        //Set of code to change unit color/strength
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            selectedColor = UnitColor.White;
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            selectedColor = UnitColor.Blue;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            selectedColor = UnitColor.Yellow;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            selectedColor = UnitColor.Black;
+        }
+
+        //Detects team changing
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            if (selectedTeam == Team.Green)
+                selectedTeam = Team.Red;
+            else
+                selectedTeam = Team.Green;
+        }
+    }
+
     public void SpawnUnit(Team team, Vector3 position)
     {
         GameObject newUnit = Instantiate(unitPrefab, position, Quaternion.identity);

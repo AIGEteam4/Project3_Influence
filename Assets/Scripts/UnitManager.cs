@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitManager : MonoBehaviour {
 
@@ -21,7 +22,6 @@ public class UnitManager : MonoBehaviour {
     public Team selectedTeam;
     public UnitColor selectedColor;
 
-    public Camera cam;
     public GameObject unitPrefab;
 
     public Material whiteMat;
@@ -31,19 +31,25 @@ public class UnitManager : MonoBehaviour {
 
     public List<GameObject> unitList;
 
+    public Canvas canvas;
+    Button teamChanger;
+    Dropdown unitDropDown;
+
 	// Use this for initialization
 	void Start ()
     {
         unitList = new List<GameObject>();
-	}
+
+        teamChanger = canvas.GetComponentInChildren<Button>();
+
+        unitDropDown = canvas.GetComponentInChildren<Dropdown>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
 		if(Input.GetMouseButtonDown(1))
         {
-            //Vector3 pos = Input.mousePosition;
-            //pos = Camera.main.ScreenToWorldPoint(pos);
             RaycastHit pos;
 
             if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out pos))
@@ -57,7 +63,7 @@ public class UnitManager : MonoBehaviour {
     private void FixedUpdate()
     {
         //Set of code to change unit color/strength
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        /*if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             selectedColor = UnitColor.White;
         }
@@ -77,13 +83,49 @@ public class UnitManager : MonoBehaviour {
         //Detects team changing
         if(Input.GetKeyDown(KeyCode.T))
         {
-            if (selectedTeam == Team.Green)
-                selectedTeam = Team.Red;
-            else
-                selectedTeam = Team.Green;
+            ChangeCurrentTeam();
+        }*/
+    }
+
+    //Changes the current team used in unit spawning
+    public void ChangeCurrentTeam()
+    {
+        if (selectedTeam == Team.Green)
+        {
+            selectedTeam = Team.Red;
+            teamChanger.GetComponentInChildren<Text>().text = "Team Red";
+        }
+        else
+        {
+            selectedTeam = Team.Green;
+            teamChanger.GetComponentInChildren<Text>().text = "Team Green";
         }
     }
 
+    //Changes the current unit used in unit spawning
+    public void ChangeCurrentUnit()
+    {
+        switch(unitDropDown.value)
+        {
+            case 0:
+                selectedColor = UnitColor.White;
+                break;
+            case 1:
+                selectedColor = UnitColor.Blue;
+                break;
+            case 2:
+                selectedColor = UnitColor.Yellow;
+                break;
+            case 3:
+                selectedColor = UnitColor.Black;
+                break;
+            default:
+                selectedColor = UnitColor.White;
+                break;
+        }
+    }
+
+    //Spawns a unit
     public void SpawnUnit(Team team, Vector3 position)
     {
         GameObject newUnit = Instantiate(unitPrefab, position, Quaternion.identity);

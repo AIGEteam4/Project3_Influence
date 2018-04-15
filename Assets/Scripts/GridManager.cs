@@ -8,7 +8,6 @@ struct GridSpace
     float redInfluence;
     float greeninfluence;
 
-    //float[] influences;
     float totalInfluence;
     Vector3 position;
     public Color color;
@@ -20,18 +19,23 @@ struct GridSpace
         totalInfluence = 0;
         position = pos;
 
-        color = Color.clear;
+        color = Color.grey;
     }
 
-    public void AddInfluence(Unit u)
+    public void AddInfluence(Vector3 unitPos, int strength, UnitManager.Team team)
     {
-        Vector3 unitPosNoY = u.transform.position;
-        unitPosNoY.y = 0;
 
-        float dist = (unitPosNoY - position).magnitude;
-        float influence = u.strength / dist;
+        float dist = (unitPos - position).magnitude / 20;
 
-        if(u.team == UnitManager.Team.Green)
+        float influence = strength;
+        if(dist > 0)
+            influence /= dist;
+
+        /*
+        if (dist > 0)
+            influence = influence / dist;*/
+
+        if(team == UnitManager.Team.Green)
         {
             greeninfluence += influence;
         }
@@ -47,7 +51,13 @@ struct GridSpace
 
     private void CalculateColor()
     {
-        color = (Color.red * (redInfluence / totalInfluence)) + (Color.green * (greeninfluence / totalInfluence));
+        if (totalInfluence == 0 || greeninfluence == redInfluence)
+            color = Color.grey;
+        else if (greeninfluence > redInfluence)
+            color = Color.Lerp(Color.grey, Color.green, greeninfluence / totalInfluence);
+        else
+            color = Color.Lerp(Color.grey, Color.red, redInfluence / totalInfluence);
+            //color = Color.green * greeninfluence / totalInfluence + Color.red * redInfluence / totalInfluence;
     }
 }
 
@@ -79,20 +89,23 @@ public class GridManager : MonoBehaviour {
                 gridSpaces[i] = new GridSpace(new Vector3((20*x)-90, 0, (20 * y) - 90));
                 
                 GameObject newMapSpace = Instantiate(mapSpacePrefab, canvas);
-                newMapSpace.transform.localPosition = new Vector3(230 + (15 * x), 50 + (15 * y), 0);
+                newMapSpace.transform.localPosition = new Vector3(450 + (20 * x), 150 + (20 * y), 0);
                 mapSpaces[i] = newMapSpace.GetComponent<Image>();
-
 
                 ++i;
             }
         }
+
+        UpdateInfluenceMap();
 	}
 
     public void AddUnit(Unit u)
     {
+        Vector3 unitGridPos = new Vector3(Mathf.Round(u.transform.position.x / 20) * 20, 0, Mathf.Round(u.transform.position.z / 20) * 20);
+
         for(int i = 0; i < gridSpaces.Length; ++i)
         {
-            gridSpaces[i].AddInfluence(u);
+            gridSpaces[i].AddInfluence(unitGridPos, u.strength, u.team);
         }
 
         UpdateInfluenceMap();

@@ -1179,6 +1179,16 @@ Prefab:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 938015658}
+    - target: {fileID: 1792901791187380, guid: 84aff134bb0f7e444b660a7c328d35e7, type: 2}
+      propertyPath: m_Name
+      value: Managers
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663228071742046, guid: 84aff134bb0f7e444b660a7c328d35e7,
+        type: 2}
+      propertyPath: mapSpacePrefab
+      value: 
+      objectReference: {fileID: 1913693818323350, guid: 90d12655419b8244f86d4ad9cc5af213,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84aff134bb0f7e444b660a7c328d35e7, type: 2}
   m_IsPrefabParent: 0

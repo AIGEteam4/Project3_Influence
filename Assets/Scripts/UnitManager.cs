@@ -35,6 +35,8 @@ public class UnitManager : MonoBehaviour {
     Button teamChanger;
     Dropdown unitDropDown;
 
+    GridManager gridMgr;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -43,6 +45,8 @@ public class UnitManager : MonoBehaviour {
         teamChanger = canvas.GetComponentInChildren<Button>();
 
         unitDropDown = canvas.GetComponentInChildren<Dropdown>();
+
+        gridMgr = GetComponent<GridManager>();
     }
 	
 	// Update is called once per frame
@@ -160,6 +164,8 @@ public class UnitManager : MonoBehaviour {
         newUnitComp.color = mat;
         newUnitComp.strength = strength;
         newUnitComp.team = selectedTeam;
+
+        gridMgr.AddUnit(newUnitComp);
 
         //Change the material
         newUnit.GetComponent<MeshRenderer>().material = mat;

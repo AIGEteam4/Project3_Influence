@@ -5,14 +5,18 @@ using UnityEngine.UI;
 
 struct GridSpace
 {
-    float[] influences;
+    float redInfluence;
+    float greeninfluence;
+
+    //float[] influences;
     float totalInfluence;
     Vector3 position;
     public Color color;
 
     public GridSpace(Vector3 pos)
     {
-        influences = new float[4];
+        redInfluence = 0;
+        greeninfluence = 0;
         totalInfluence = 0;
         position = pos;
 
@@ -27,34 +31,23 @@ struct GridSpace
         float dist = (unitPosNoY - position).magnitude;
         float influence = u.strength / dist;
 
+        if(u.team == UnitManager.Team.Green)
+        {
+            greeninfluence += influence;
+        }
+        else
+        {
+            redInfluence += influence;
+        }
+
         totalInfluence += influence;
-        influences[u.strength - 1] = influence;
 
         CalculateColor();
     }
 
     private void CalculateColor()
     {
-        Color newColor = Color.clear;
-
-        if(influences[0] > 0)
-        {
-            newColor = (newColor + Color.white) * influences[0]/totalInfluence;
-        }
-        if(influences[1] > 0)
-        {
-            newColor  = (newColor + Color.blue) * influences[1]/totalInfluence;
-        }
-        if(influences[2] > 0)
-        {
-            newColor = (newColor + Color.yellow) * influences[2]/totalInfluence;
-        }
-        if(influences[3] > 0)
-        {
-            newColor =  (newColor + Color.black) * influences[2]/totalInfluence;
-        }
-
-        color = newColor;
+        color = (Color.red * (redInfluence / totalInfluence)) + (Color.green * (greeninfluence / totalInfluence));
     }
 }
 
@@ -94,6 +87,16 @@ public class GridManager : MonoBehaviour {
             }
         }
 	}
+
+    public void AddUnit(Unit u)
+    {
+        for(int i = 0; i < gridSpaces.Length; ++i)
+        {
+            gridSpaces[i].AddInfluence(u);
+        }
+
+        UpdateInfluenceMap();
+    }
 
     void UpdateInfluenceMap()
     {

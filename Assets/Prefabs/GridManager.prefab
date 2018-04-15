@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4207007356237366}
   - component: {fileID: 114663228071742046}
+  - component: {fileID: 114852731125570028}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -53,3 +54,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spacePrefab: {fileID: 1558921749548614, guid: 40637e60446a3bc49bc2c42858080ea4,
     type: 2}
+--- !u!114 &114852731125570028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1792901791187380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0c3e9aac8209744a60b82e3c7cf48f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedTeam: 0
+  selectedColor: 0
+  cam: {fileID: 0}
+  unitPrefab: {fileID: 1034176923043570, guid: 851206c257aeea54abfb78698cb2caa4, type: 2}
+  whiteMat: {fileID: 2100000, guid: 7ea5aeb95d7d5894c84d01e6f53c6868, type: 2}
+  blueMat: {fileID: 2100000, guid: 7536886e578f47c4698564dfca67a3f6, type: 2}
+  yellowMat: {fileID: 2100000, guid: 50820875192fc4b47869f89fdf050a3f, type: 2}
+  blackMat: {fileID: 2100000, guid: d9cf5cfe371cedf439a3cb92fadf47e3, type: 2}

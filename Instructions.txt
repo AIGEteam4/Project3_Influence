@@ -1,0 +1,11 @@
+HOW TO USE:
+Scroll with your mouse or press the Q and E keys to zoom in and out.
+Left mouse click and drag anywhere to pan the camera around.
+You may also press the WASD keys or the arrow keys to pan the camera.
+
+Toggle whether you will spawn a unit on the red team or green team by pressing the "Team" button in the upper left corner.
+Use the drop-down menu in the upper left corner to select what type of unit you would like to spawn.
+Right mouse click on the terrain to place a unit at the point where you clicked.
+
+The terrain's influence map is represented as a grid in the upper right corner of the screen. It will automatically update each time
+a new unit is spawned.

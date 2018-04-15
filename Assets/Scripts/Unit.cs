@@ -5,27 +5,34 @@ using UnityEngine;
 public class Unit : MonoBehaviour {
 
     //Basic attributes
-    public Material color;
+    //public Material color;
     public int strength;
+    public Color color;
+    public Color teamColor;
 
     public UnitManager.Team team;
 
-    //Constructor
-    public Unit(Material mat, int str, UnitManager.Team tm)
+    public void init(int str, UnitManager.Team tm)
     {
-        color = mat;
         strength = str;
         team = tm;
-    }
 
-	// Use this for initialization
-	void Start ()
-    {
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
+        teamColor = (team == UnitManager.Team.Green ? Color.green : Color.red);
+
+        switch (str)
+        {
+            case 1:
+                color = Color.white;
+                break;
+            case 2:
+                color = Color.blue;
+                break;
+            case 3:
+                color = Color.yellow;
+                break;
+            case 4:
+                color = Color.black;
+                break;
+        }
+    }
 }

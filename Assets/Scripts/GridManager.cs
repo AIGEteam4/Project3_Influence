@@ -31,10 +31,6 @@ struct GridSpace
         if(dist > 0)
             influence /= dist;
 
-        /*
-        if (dist > 0)
-            influence = influence / dist;*/
-
         if(team == UnitManager.Team.Green)
         {
             greeninfluence += influence;

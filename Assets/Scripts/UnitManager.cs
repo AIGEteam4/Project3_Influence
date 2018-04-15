@@ -63,34 +63,6 @@ public class UnitManager : MonoBehaviour {
         }
 	}
 
-    //Handles keyboard input
-    private void FixedUpdate()
-    {
-        //Set of code to change unit color/strength
-        /*if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            selectedColor = UnitColor.White;
-        }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            selectedColor = UnitColor.Blue;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            selectedColor = UnitColor.Yellow;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            selectedColor = UnitColor.Black;
-        }
-
-        //Detects team changing
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            ChangeCurrentTeam();
-        }*/
-    }
-
     //Changes the current team used in unit spawning
     public void ChangeCurrentTeam()
     {
@@ -106,69 +78,20 @@ public class UnitManager : MonoBehaviour {
         }
     }
 
-    //Changes the current unit used in unit spawning
-    public void ChangeCurrentUnit()
-    {
-        switch(unitDropDown.value)
-        {
-            case 0:
-                selectedColor = UnitColor.White;
-                break;
-            case 1:
-                selectedColor = UnitColor.Blue;
-                break;
-            case 2:
-                selectedColor = UnitColor.Yellow;
-                break;
-            case 3:
-                selectedColor = UnitColor.Black;
-                break;
-            default:
-                selectedColor = UnitColor.White;
-                break;
-        }
-    }
-
     //Spawns a unit
     public void SpawnUnit(Team team, Vector3 position)
     {
         GameObject newUnit = Instantiate(unitPrefab, position, Quaternion.identity);
 
         Unit newUnitComp = newUnit.GetComponent<Unit>();
-
-        int strength = 1;
-        Material mat = whiteMat;
-
-        //Get the strength and material based off the unit color
-        switch(selectedColor)
-        {
-            case UnitColor.White:
-                strength = 1;
-                mat = whiteMat;
-                break;
-            case UnitColor.Blue:
-                strength = 2;
-                mat = blueMat;
-                break;
-            case UnitColor.Yellow:
-                strength = 3;
-                mat = yellowMat;
-                break;
-            case UnitColor.Black:
-                strength = 4;
-                mat = blackMat;
-                break;
-        }
-
-        //Change the type of Unit
-        newUnitComp.color = mat;
-        newUnitComp.strength = strength;
-        newUnitComp.team = selectedTeam;
+        newUnitComp.init(unitDropDown.value + 1, selectedTeam);
 
         gridMgr.AddUnit(newUnitComp);
 
-        //Change the material
-        newUnit.GetComponent<MeshRenderer>().material = mat;
+        //Change the material colors
+        newUnit.GetComponent<MeshRenderer>().material.color = newUnitComp.color;
+        newUnit.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = newUnitComp.teamColor;
+
         unitList.Add(newUnit);
     }
 }

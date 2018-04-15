@@ -19,7 +19,8 @@ public class TopDownCam : MonoBehaviour {
         gameObject.transform.eulerAngles = new Vector3(90, 0, 0);
         speed = 2;
         cam = gameObject.GetComponent<Camera>();
-        cam.orthographicSize = 100;
+        
+        //cam.orthographicSize = 100;
     }
 	
 	// Update is called once per frame

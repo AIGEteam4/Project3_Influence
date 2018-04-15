@@ -1199,6 +1199,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114877767726947922, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 224682099336226178, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -1304,6 +1309,26 @@ Prefab:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1363635039}
+    - target: {fileID: 114877767726947922, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeCurrentUnit
+      objectReference: {fileID: 0}
+    - target: {fileID: 114877767726947922, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114877767726947922, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114877767726947922, guid: 8505cf4ed2a990e4eaafa6bef02ed475,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8505cf4ed2a990e4eaafa6bef02ed475, type: 2}
   m_IsPrefabParent: 0
@@ -3489,7 +3514,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 51.2
+  field of view: 60
   orthographic: 1
   orthographic size: 100
   m_Depth: -1
@@ -3513,13 +3538,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1363635036}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!114 &1363635041
 MonoBehaviour:
   m_ObjectHideFlags: 0
